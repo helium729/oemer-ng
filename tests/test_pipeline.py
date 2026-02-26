@@ -7,7 +7,6 @@ import pytest
 import tempfile
 import os
 import numpy as np
-from unittest.mock import patch, MagicMock
 from oemer_ng.inference.pipeline import OMRPipeline
 from oemer_ng.models.omr_model import OMRModel
 
@@ -127,17 +126,20 @@ def test_predict_batch_preprocessing_error():
     """Test error handling when preprocessing fails."""
     pipeline = OMRPipeline(num_classes=128)
     
-    # Mock preprocess_image to raise an exception for one image
+    # Mock preprocess_image to raise an exception for the second image
     original_preprocess = pipeline.preprocess_image
-    call_count = [0]
     
-    def failing_preprocess(image, enhance=True):
-        call_count[0] += 1
-        if call_count[0] == 2:
-            raise ValueError("Simulated preprocessing error")
-        return original_preprocess(image, enhance)
+    class FailingPreprocessor:
+        def __init__(self):
+            self.call_count = 0
+        
+        def __call__(self, image, enhance=True):
+            self.call_count += 1
+            if self.call_count == 2:
+                raise ValueError("Simulated preprocessing error")
+            return original_preprocess(image, enhance)
     
-    pipeline.preprocess_image = failing_preprocess
+    pipeline.preprocess_image = FailingPreprocessor()
     
     # Create test images
     images = [np.random.randint(0, 256, (256, 256, 3), dtype=np.uint8) for _ in range(3)]
