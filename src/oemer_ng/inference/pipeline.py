@@ -211,6 +211,11 @@ class OMRPipeline:
             # executor.map submits all tasks and returns an iterator that yields results in order.
             # This naturally overlaps preprocessing with inference and parallelizes within batches
             # without nested executor calls that could lead to deadlocks.
+            # NOTE: self.preprocess_image (and the underlying ImagePreprocessor) is called from
+            # multiple threads. This relies on ImagePreprocessor being effectively stateless /
+            # read-only and therefore thread-safe. If mutable state or caching is added to
+            # ImagePreprocessor in the future, it must remain thread-safe or this parallel
+            # preprocessing implementation must be revisited.
             preprocess_fn = lambda img: self.preprocess_image(img, enhance=enhance)
             tensors_iter = executor.map(preprocess_fn, images)
             
