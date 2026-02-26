@@ -37,6 +37,7 @@ jobs:
           
       - name: Type check with mypy
         run: |
+          # Non-blocking type check - allows CI to pass while gradually improving type coverage
           mypy src/ --ignore-missing-imports || true
 
   test:
