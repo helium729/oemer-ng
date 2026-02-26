@@ -4,7 +4,7 @@ OMR Inference Pipeline.
 
 import torch
 import numpy as np
-import pickle
+import warnings
 from pathlib import Path
 from typing import Union, List, Dict, Optional
 from PIL import Image
@@ -74,11 +74,12 @@ class OMRPipeline:
                 map_location=self.device,
                 weights_only=True,
             )
-        except (TypeError, RuntimeError, pickle.UnpicklingError) as exc:
-            print(
-                f"Warning: Failed to load checkpoint with weights_only=True ({exc}). "
+        except Exception as exc:
+            warnings.warn(
+                f"Failed to load checkpoint with weights_only=True ({exc}). "
                 "Falling back to weights_only=False. "
-                "Only use this with trusted checkpoint files."
+                "Only use this with trusted checkpoint files.",
+                UserWarning
             )
             checkpoint = torch.load(
                 model_path,
