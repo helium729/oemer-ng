@@ -3,6 +3,7 @@ import time
 import torch
 import numpy as np
 import os
+import traceback
 from PIL import Image
 from oemer_ng.inference.pipeline import OMRPipeline
 
@@ -42,4 +43,5 @@ if __name__ == "__main__":
         benchmark_predict_batch()
     except Exception as e:
         print(f"\nError running benchmark: {e}")
-        print("This is likely due to missing dependencies in the environment.")
+        print("\nFull traceback:")
+        traceback.print_exc()

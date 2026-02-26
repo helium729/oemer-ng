@@ -136,7 +136,7 @@ dmypy.json
 *.ggml
 *.bin
 checkpoints/
-models/
+/models/
 weights/
 
 # Data
