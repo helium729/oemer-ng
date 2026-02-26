@@ -66,7 +66,7 @@ class OMRPipeline:
         Args:
             model_path: Path to model checkpoint
         """
-        checkpoint = torch.load(model_path, map_location=self.device)
+        checkpoint = torch.load(model_path, map_location=self.device, weights_only=True)
         
         # Handle different checkpoint formats
         if isinstance(checkpoint, dict):
