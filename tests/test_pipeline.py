@@ -61,5 +61,28 @@ def test_quantization():
     assert isinstance(result, int)
 
 
+def test_safe_checkpoint_loading():
+    """Test that checkpoints saved with torch.save can be loaded with weights_only=True."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        model_path = os.path.join(tmpdir, 'test_safe_model.pth')
+        
+        # Create and save model
+        pipeline = OMRPipeline(num_classes=64)
+        pipeline.save_model(model_path)
+        
+        # Load using weights_only=True (should succeed)
+        checkpoint = torch.load(model_path, weights_only=True)
+        
+        # Verify checkpoint structure
+        assert isinstance(checkpoint, dict)
+        assert 'model_state_dict' in checkpoint
+        assert 'num_classes' in checkpoint
+        assert checkpoint['num_classes'] == 64
+        
+        # Verify loading into pipeline works
+        pipeline2 = OMRPipeline(model_path=model_path, num_classes=64)
+        assert pipeline2.model is not None
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

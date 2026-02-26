@@ -5,6 +5,7 @@ Training utilities for OMR models.
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import pickle
 from torch.utils.data import DataLoader
 from typing import Optional, Dict, Any, Callable
 from pathlib import Path
@@ -209,7 +210,24 @@ class Trainer:
         Args:
             checkpoint_path: Path to checkpoint file
         """
-        checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=True)
+        # Prefer safe loading of tensor-only checkpoints, but fall back for legacy files.
+        try:
+            checkpoint = torch.load(
+                checkpoint_path,
+                map_location=self.device,
+                weights_only=True,
+            )
+        except (TypeError, RuntimeError, pickle.UnpicklingError) as exc:
+            print(
+                f"Warning: Failed to load checkpoint with weights_only=True ({exc}). "
+                "Falling back to weights_only=False. "
+                "Only use this with trusted checkpoint files."
+            )
+            checkpoint = torch.load(
+                checkpoint_path,
+                map_location=self.device,
+                weights_only=False,
+            )
         
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
