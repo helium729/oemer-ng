@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import warnings
+import pickle
 from torch.utils.data import DataLoader
 from typing import Optional, Dict, Any, Callable
 from pathlib import Path
@@ -217,7 +218,7 @@ class Trainer:
                 map_location=self.device,
                 weights_only=True,
             )
-        except Exception as exc:
+        except (pickle.UnpicklingError, RuntimeError) as exc:
             warnings.warn(
                 f"Failed to load checkpoint with weights_only=True ({exc}). "
                 "Falling back to weights_only=False. "
