@@ -97,8 +97,16 @@ class Trainer:
             output = self.model(data)
             loss = self.criterion(output, target)
 
-            # Backward pass
+            # Check for NaN loss
+            if torch.isnan(loss):
+                print(f"\nWarning: NaN loss detected at epoch {self.current_epoch + 1}, batch {batch_idx}")
+                print(f"Loss value: {loss}")
+                print("Skipping this batch...")
+                continue
+
+            # Backward pass with gradient clipping
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
             self.optimizer.step()
 
             # Statistics

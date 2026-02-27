@@ -59,7 +59,7 @@ def main():
         n_channels = 1
 
     print(f"Initializing model with n_channels={n_channels}, num_classes={num_classes}")
-    model = OMRModel(n_channels=n_channels, num_classes=num_classes)
+    model = OMRModel(n_channels=n_channels, num_classes=num_classes, mode="segmentation")
 
     # Data Transforms
     # Basic transforms. More complex augmentations are handled in Dataset or can be added here.
@@ -95,7 +95,7 @@ def main():
         print(f"Val batches: {len(val_loader)}")
 
     # Optimization
-    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)  # Lower learning rate to prevent NaN
 
     # Loss function
     # FocalTverskyLoss is good for segmentation with class imbalance
