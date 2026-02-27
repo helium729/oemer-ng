@@ -99,7 +99,9 @@ class Trainer:
 
             # Check for NaN loss
             if torch.isnan(loss):
-                print(f"\nWarning: NaN loss detected at epoch {self.current_epoch + 1}, batch {batch_idx}")
+                print(
+                    f"\nWarning: NaN loss detected at epoch {self.current_epoch + 1}, batch {batch_idx}"
+                )
                 print(f"Loss value: {loss}")
                 print("Skipping this batch...")
                 continue

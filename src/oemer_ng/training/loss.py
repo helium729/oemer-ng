@@ -27,7 +27,9 @@ class FocalTverskyLoss(nn.Module):
         # targets: (B, C, H, W) 0 or 1 masks
 
         # Ensure inputs and targets have same spatial dimensions
-        assert inputs.shape == targets.shape, f"Shape mismatch: inputs {inputs.shape} vs targets {targets.shape}"
+        assert (
+            inputs.shape == targets.shape
+        ), f"Shape mismatch: inputs {inputs.shape} vs targets {targets.shape}"
 
         # Calculate Probabilities
         probs = torch.sigmoid(inputs)

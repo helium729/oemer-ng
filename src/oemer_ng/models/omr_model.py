@@ -65,11 +65,11 @@ class SegmentationHead(nn.Module):
         self.conv1 = nn.Conv2d(in_channels, in_channels // 2, 3, padding=1)
         self.bn1 = nn.BatchNorm2d(in_channels // 2)
         self.relu1 = nn.ReLU(inplace=True)
-        
+
         self.conv2 = nn.Conv2d(in_channels // 2, in_channels // 4, 3, padding=1)
         self.bn2 = nn.BatchNorm2d(in_channels // 4)
         self.relu2 = nn.ReLU(inplace=True)
-        
+
         self.conv3 = nn.Conv2d(in_channels // 4, num_classes, 1)
         self.scale_factor = scale_factor
 
@@ -77,7 +77,7 @@ class SegmentationHead(nn.Module):
         x = self.relu1(self.bn1(self.conv1(x)))
         x = self.relu2(self.bn2(self.conv2(x)))
         x = self.conv3(x)
-        x = F.interpolate(x, scale_factor=self.scale_factor, mode='bilinear', align_corners=True)
+        x = F.interpolate(x, scale_factor=self.scale_factor, mode="bilinear", align_corners=True)
         return x
 
 
