@@ -77,7 +77,7 @@ class SegmentationHead(nn.Module):
         x = self.relu1(self.bn1(self.conv1(x)))
         x = self.relu2(self.bn2(self.conv2(x)))
         x = self.conv3(x)
-        x = F.interpolate(x, scale_factor=self.scale_factor, mode="bilinear", align_corners=True)
+        x = F.interpolate(x, scale_factor=self.scale_factor, mode="bilinear", align_corners=False)
         return x
 
 
