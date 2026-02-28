@@ -95,7 +95,7 @@ def main():
         print(f"Val batches: {len(val_loader)}")
 
     # Optimization
-    optimizer = optim.Adam(model.parameters(), lr=1e-4)  # Lower learning rate to prevent NaN
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
     # Loss function
     # FocalTverskyLoss is good for segmentation with class imbalance
