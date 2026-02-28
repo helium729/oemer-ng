@@ -50,10 +50,9 @@ class FocalTverskyLoss(nn.Module):
             fn = (targets_b * (1 - probs_b)).sum()
             fp = ((1 - targets_b) * probs_b).sum()
 
-            # Numerical stability: add epsilon to denominator to prevent division by zero
-            eps = 1e-7
+            # Numerical stability: smooth term prevents division by zero
             tversky_index = (tp + self.smooth) / (
-                tp + self.alpha * fn + (1 - self.alpha) * fp + self.smooth + eps
+                tp + self.alpha * fn + (1 - self.alpha) * fp + self.smooth
             )
             tversky_loss = 1 - tversky_index
             t_loss = torch.pow(tversky_loss, self.gamma)
