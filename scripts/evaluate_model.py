@@ -145,20 +145,24 @@ def evaluate_model(model_path, dataset_path, dataset_type, batch_size=4, num_wor
 
     # IoU per class
     print(f"\nIoU per class:")
+    avg_ious = []
     for cls in range(num_classes):
         avg_iou = total_iou[cls] / num_batches
+        avg_ious.append(avg_iou)
         print(f"  Class {cls}: {avg_iou:.4f}")
 
-    mean_iou = sum(total_iou.values()) / num_classes
+    mean_iou = sum(avg_ious) / num_classes
     print(f"\nMean IoU: {mean_iou:.4f}")
 
     # Dice per class
     print(f"\nDice Coefficient per class:")
+    avg_dices = []
     for cls in range(num_classes):
         avg_dice = total_dice[cls] / num_batches
+        avg_dices.append(avg_dice)
         print(f"  Class {cls}: {avg_dice:.4f}")
 
-    mean_dice = sum(total_dice.values()) / num_classes
+    mean_dice = sum(avg_dices) / num_classes
     print(f"\nMean Dice: {mean_dice:.4f}")
 
     print("=" * 60)
