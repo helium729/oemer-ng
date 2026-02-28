@@ -114,6 +114,10 @@ class OMRModel(nn.Module):
             raise ValueError(
                 f"Invalid mode '{mode}'. Expected 'classification' or 'segmentation'."
             )
+        if mode not in ("classification", "segmentation"):
+            raise ValueError(
+                f"Invalid mode '{mode}'. Expected 'classification' or 'segmentation'."
+            )
         self.mode = mode
 
         # Encoder
