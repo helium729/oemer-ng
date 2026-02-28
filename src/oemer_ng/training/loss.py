@@ -62,9 +62,13 @@ class FocalTverskyLoss(nn.Module):
         tversky_loss = torch.stack(tversky_losses).mean()
 
         # Focal Loss
-        # sigmoid_focal_loss takes logits, shape (N, C) where N is total elements
+        # sigmoid_focal_loss expects logits of shape (N, C), where each row is a sample.
+        # Treat each pixel as a separate sample with C channels/classes.
+        b, c, h, w = inputs.shape
+        inputs_focal = inputs.permute(0, 2, 3, 1).reshape(-1, c)
+        targets_focal = targets.permute(0, 2, 3, 1).reshape(-1, c)
         f_loss = sigmoid_focal_loss(
-            inputs_flat, targets_flat, alpha=0.25, gamma=2.0, reduction="mean"
+            inputs_focal, targets_focal, alpha=0.25, gamma=2.0, reduction="mean"
         )
 
         return self.fw * f_loss + (1 - self.fw) * tversky_loss
